@@ -56,7 +56,8 @@ namespace McpUi.Web.Services
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             WriteIndented = false,
-            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+            Converters = { new McpUi.Web.Models.FlexibleIdConverter() }
         };
 
         public McpJsonRpcHttpClient(IHttpClientFactory httpClientFactory, IOptions<McpOptions> options, ILogger<McpJsonRpcHttpClient> logger)
@@ -136,6 +137,7 @@ namespace McpUi.Web.Services
             var req = new JsonRpcRequest
             {
                 Method = method,
+                Id = Guid.NewGuid().ToString("N"),
                 Params = @params is null
                     ? (JsonElement?)null
                     : JsonDocument.Parse(JsonSerializer.SerializeToUtf8Bytes(@params, JsonOptions)).RootElement

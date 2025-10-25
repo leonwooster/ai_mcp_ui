@@ -33,8 +33,20 @@ namespace McpUi.Web.Controllers
                 _logger.LogInformation("Connect (GET) successful");
                 
                 // Get the session ID from the client
-                // Both McpJsonRpcHttpClient and McpStdioClient expose SessionId property
-                var sessionId = (_mcp as dynamic)?.SessionId ?? "";
+                var sessionId = "";
+                if (_mcp is McpJsonRpcHttpClient httpClient)
+                {
+                    sessionId = httpClient.SessionId;
+                }
+                else if (_mcp is McpStdioSessionClient sessionClient)
+                {
+                    sessionId = sessionClient.SessionId;
+                }
+                else
+                {
+                    // Fallback for other client types
+                    sessionId = (_mcp as dynamic)?.SessionId ?? "";
+                }
                 
                 // Create a response that includes both the original result and the session ID
                 var responseObject = new {
@@ -62,8 +74,20 @@ namespace McpUi.Web.Controllers
                 _logger.LogInformation("Connect successful");
                 
                 // Get the session ID from the client
-                // Both McpJsonRpcHttpClient and McpStdioClient expose SessionId property
-                var sessionId = (_mcp as dynamic)?.SessionId ?? "";
+                var sessionId = "";
+                if (_mcp is McpJsonRpcHttpClient httpClient)
+                {
+                    sessionId = httpClient.SessionId;
+                }
+                else if (_mcp is McpStdioSessionClient sessionClient)
+                {
+                    sessionId = sessionClient.SessionId;
+                }
+                else
+                {
+                    // Fallback for other client types
+                    sessionId = (_mcp as dynamic)?.SessionId ?? "";
+                }
                 
                 // Create a response that includes both the original result and the session ID
                 var responseObject = new {

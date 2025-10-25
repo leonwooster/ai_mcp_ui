@@ -22,14 +22,12 @@ namespace McpUi.Web.Services
         private string _sessionId = Guid.Empty.ToString();
         private bool _disposed = false;
 
-        // Expose session ID for controller to return to client
-        public string SessionId => _sessionId;
-
         private static readonly JsonSerializerOptions JsonOptions = new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             WriteIndented = false,
-            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+            Converters = { new McpUi.Web.Models.FlexibleIdConverter() }
         };
 
         public McpStdioClient(IOptions<McpOptions> options, ILogger<McpStdioClient> logger)
@@ -139,7 +137,7 @@ namespace McpUi.Web.Services
             var req = new
             {
                 jsonrpc = "2.0",
-                id = requestId,
+                id = (object)requestId,
                 method = method,
                 @params = @params
             };

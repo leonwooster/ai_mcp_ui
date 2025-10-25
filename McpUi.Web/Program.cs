@@ -25,7 +25,8 @@ builder.Services.AddHttpClient("Mcp", client =>
     client.DefaultRequestHeaders.Accept.ParseAdd("text/event-stream");
 });
 
-// Register MCP client factory and scoped client provider
+// Register MCP session manager as singleton and client factory as scoped
+builder.Services.AddSingleton<McpUi.Web.Services.McpStdioSessionManager>();
 builder.Services.AddScoped<McpUi.Web.Services.McpClientFactory>();
 builder.Services.AddScoped<McpUi.Web.Services.IMcpClient>(serviceProvider =>
 {

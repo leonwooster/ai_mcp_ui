@@ -7,7 +7,7 @@ namespace McpUi.Web.Models
     public class JsonRpcRequest
     {
         [JsonPropertyName("jsonrpc")] public string JsonRpc { get; set; } = "2.0";
-        [JsonPropertyName("id")] public string Id { get; set; } = Guid.NewGuid().ToString("N");
+        [JsonPropertyName("id"), JsonConverter(typeof(FlexibleIdConverter))] public object Id { get; set; } = Guid.NewGuid().ToString("N");
         [JsonPropertyName("method")] public string Method { get; set; } = string.Empty;
         [JsonPropertyName("params")] public JsonElement? Params { get; set; }
     }
@@ -15,7 +15,7 @@ namespace McpUi.Web.Models
     public class JsonRpcResponse
     {
         [JsonPropertyName("jsonrpc")] public string? JsonRpc { get; set; }
-        [JsonPropertyName("id")] public string? Id { get; set; }
+        [JsonPropertyName("id"), JsonConverter(typeof(FlexibleIdConverter))] public object? Id { get; set; }
         [JsonPropertyName("result")] public JsonElement? Result { get; set; }
         [JsonPropertyName("error")] public JsonRpcError? Error { get; set; }
     }

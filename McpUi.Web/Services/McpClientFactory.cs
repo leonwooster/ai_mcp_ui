@@ -10,17 +10,20 @@ namespace McpUi.Web.Services
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<McpJsonRpcHttpClient> _httpLogger;
         private readonly ILogger<McpStdioClient> _stdioLogger;
+        private readonly McpStdioSessionManager _sessionManager;
 
         public McpClientFactory(
             IOptions<McpOptions> options,
             IHttpClientFactory httpClientFactory,
             ILogger<McpJsonRpcHttpClient> httpLogger,
-            ILogger<McpStdioClient> stdioLogger)
+            ILogger<McpStdioClient> stdioLogger,
+            McpStdioSessionManager sessionManager)
         {
             _options = options;
             _httpClientFactory = httpClientFactory;
             _httpLogger = httpLogger;
             _stdioLogger = stdioLogger;
+            _sessionManager = sessionManager;
         }
 
         public IMcpClient CreateClient()
@@ -28,7 +31,7 @@ namespace McpUi.Web.Services
             return _options.Value.Transport?.ToLowerInvariant() switch
             {
                 "httpstreaming" or "sse" => new McpJsonRpcHttpClient(_httpClientFactory, _options, _httpLogger),
-                "stdio" => new McpStdioClient(_options, _stdioLogger),
+                "stdio" => new McpStdioSessionClient(_options, _stdioLogger, _sessionManager),
                 _ => throw new NotSupportedException($"Transport type '{_options.Value.Transport}' is not supported.")
             };
         }
