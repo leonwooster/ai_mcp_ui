@@ -1,0 +1,127 @@
+# Visual Studio
+.vs/
+*.vsidx
+*.vswidx
+
+# Visual Studio Code
+.vscode/
+
+# Logs
+logs/
+*.log
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+[Bb]uild/
+[Bb]uilds/
+[Pp]ublish/
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+**/Properties/launchSettings.json
+
+# NuGet Packages
+*.nupkg
+*.nuspec
+
+# .NET auto generated files
+*.user
+*.suo
+*.ntvs*
+*.njsproj
+*.sln.docstates
+
+# IDE specific files
+*.csproj.user
+*.vcxproj.filters
+*.vcxproj.user
+
+# Backup & temp files
+*~
+*.bak
+*.tmp
+*.orig
+*.swp
+
+# OS generated files
+Thumbs.db
+.DS_Store
+
+# Rider
+*.sln.iml
+
+# Mac
+.DS_Store
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# TeamCity
+_TeamCity/
+
+# DotCover
+*.dotCover
+
+# NCrunch
+_NCrunch_*
+*.ncrunchproject
+*.ncrunchsolution
+
+# xunit
+*.xunit.cache
+
+# MSTest
+TestResults/
+
+# BenchmarkDotNet
+BenchmarkDotNet.Artifacts/
+
+# .NET Publish
+publish/
+
+# User specific files
+*.userosscache
+*.userprefs
+
+# Machine specific files
+*.sln.ide
+
+# Rider
+*.sln.iml
+.idea/
+
+# CodeRush
+*.cr/
+
+# WebStorm
+*.ws
+
+# .NET Core
+*.deps.json
+*.runtimeconfig.json
+appsettings.*.json
+
+# Local configuration files
+appsettings.Development.json
+appsettings.Local.json
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Docker
+.dockerignore
+
+# IDE temp files
+*.tmp
+*.temp
