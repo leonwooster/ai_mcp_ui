@@ -25,8 +25,13 @@ builder.Services.AddHttpClient("Mcp", client =>
     client.DefaultRequestHeaders.Accept.ParseAdd("text/event-stream");
 });
 
-// Register MCP client implementation as scoped so each request can manage its own session
-builder.Services.AddScoped<McpUi.Web.Services.IMcpClient, McpUi.Web.Services.McpJsonRpcHttpClient>();
+// Register MCP client factory and scoped client provider
+builder.Services.AddScoped<McpUi.Web.Services.McpClientFactory>();
+builder.Services.AddScoped<McpUi.Web.Services.IMcpClient>(serviceProvider =>
+{
+    var factory = serviceProvider.GetRequiredService<McpUi.Web.Services.McpClientFactory>();
+    return factory.CreateClient();
+});
 
 var app = builder.Build();
 

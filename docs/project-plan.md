@@ -16,6 +16,13 @@ Deliver an ASP.NET Core MVC client that can connect to MCP servers, render MCP-U
     - Given valid `ExePath` and `Args`, when I start the connection, then the process starts and stderr logs are captured.
     - Given the server process is started, when I call `initialize`, then I receive a 200 OK with protocol version and server info.
     - Given the connection is active, when I disconnect, then the process exits within 5s (graceful shutdown) or is killed and reported.
+  - Status: ✅ Implemented
+    - Created `McpStdioClient` implementation that spawns local MCP servers via stdio
+    - Added process management with graceful shutdown (5s timeout) and force kill fallback
+    - Implemented stderr log capture
+    - Added factory pattern (`McpClientFactory`) to switch between transports
+    - Updated configuration to support stdio transport options
+    - Added test server implementation for verification
 
 ### Epic 2: REST API Surface
 - Story 2.1: As a user, I can initialize a connection.

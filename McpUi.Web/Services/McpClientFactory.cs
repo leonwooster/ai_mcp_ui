@@ -1,0 +1,36 @@
+using System;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
+
+namespace McpUi.Web.Services
+{
+    public class McpClientFactory
+    {
+        private readonly IOptions<McpOptions> _options;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ILogger<McpJsonRpcHttpClient> _httpLogger;
+        private readonly ILogger<McpStdioClient> _stdioLogger;
+
+        public McpClientFactory(
+            IOptions<McpOptions> options,
+            IHttpClientFactory httpClientFactory,
+            ILogger<McpJsonRpcHttpClient> httpLogger,
+            ILogger<McpStdioClient> stdioLogger)
+        {
+            _options = options;
+            _httpClientFactory = httpClientFactory;
+            _httpLogger = httpLogger;
+            _stdioLogger = stdioLogger;
+        }
+
+        public IMcpClient CreateClient()
+        {
+            return _options.Value.Transport?.ToLowerInvariant() switch
+            {
+                "httpstreaming" or "sse" => new McpJsonRpcHttpClient(_httpClientFactory, _options, _httpLogger),
+                "stdio" => new McpStdioClient(_options, _stdioLogger),
+                _ => throw new NotSupportedException($"Transport type '{_options.Value.Transport}' is not supported.")
+            };
+        }
+    }
+}

@@ -1,10 +1,11 @@
+using System;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace McpUi.Web.Services
 {
-    public interface IMcpClient
+    public interface IMcpClient : IDisposable
     {
         Task<JsonDocument> InitializeAsync(string? endpointOverride = null, CancellationToken ct = default);
         Task<JsonDocument> ToolsListAsync(string? sessionId, string? cursor = null, string? endpointOverride = null, CancellationToken ct = default);

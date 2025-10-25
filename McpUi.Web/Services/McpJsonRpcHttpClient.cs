@@ -18,6 +18,7 @@ namespace McpUi.Web.Services
         private readonly IOptions<McpOptions> _options;
         private readonly ILogger<McpJsonRpcHttpClient> _logger;
         private string _sessionId = Guid.Empty.ToString();
+        private bool _disposed = false;
 
         // Expose session ID for controller to return to client
         public string SessionId => _sessionId;
@@ -29,6 +30,25 @@ namespace McpUi.Web.Services
             {
                 _sessionId = sessionId;
                 _logger.LogInformation("Session ID set to: {SessionId}", _sessionId);
+            }
+        }
+
+        public void Dispose()
+        {
+            // Nothing to dispose in this implementation
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resources
+                }
+                _disposed = true;
             }
         }
 
