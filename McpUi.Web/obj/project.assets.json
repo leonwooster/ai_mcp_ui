@@ -1276,11 +1276,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Tester\\ai_mcp_ui\\McpUi.Web\\McpUi.Web.csproj",
+      "projectUniqueName": "d:\\Tester\\ai_mcp_ui\\McpUi.Web\\McpUi.Web.csproj",
       "projectName": "McpUi.Web",
-      "projectPath": "D:\\Tester\\ai_mcp_ui\\McpUi.Web\\McpUi.Web.csproj",
+      "projectPath": "d:\\Tester\\ai_mcp_ui\\McpUi.Web\\McpUi.Web.csproj",
       "packagesPath": "C:\\Users\\leonwoo\\.nuget\\packages\\",
-      "outputPath": "D:\\Tester\\ai_mcp_ui\\McpUi.Web\\obj\\",
+      "outputPath": "d:\\Tester\\ai_mcp_ui\\McpUi.Web\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

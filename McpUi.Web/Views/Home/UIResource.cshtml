@@ -1,0 +1,188 @@
+@using System.Linq
+@{
+    ViewData["Title"] = "UI Resource";
+}
+
+@functions {
+    public bool IsUriAllowed(string uri)
+    {
+        try
+        {
+            var uriObj = new Uri(uri);
+            
+            // Only allow http and https URLs
+            if (uriObj.Scheme != "http" && uriObj.Scheme != "https")
+            {
+                return false;
+            }
+            
+            // Define allowed domains (in a real implementation, this would come from configuration)
+            var allowedDomains = new[]
+            {
+                "localhost",
+                "127.0.0.1",
+                "example.com",
+                "github.com",
+                "microsoft.com"
+            };
+            
+            // Check if the domain is in the allowlist
+            var hostname = uriObj.Host.ToLower();
+            return allowedDomains.Any(domain => 
+                hostname == domain.ToLower() || 
+                hostname.EndsWith("." + domain.ToLower())
+            );
+        }
+        catch
+        {
+            return false;
+        }
+    }
+}
+
+<div class="container mt-4">
+    <h2>UI Resource Renderer</h2>
+    
+    @if (ViewBag.SessionId != null)
+    {
+        <script>
+            window.currentSessionId = "@ViewBag.SessionId";
+        </script>
+    }
+    
+    @if (ViewBag.UIResource != null)
+    {
+        var uiResource = ViewBag.UIResource as McpUi.Web.Models.UIResource;
+        
+        @if (uiResource?.MimeType == "text/html")
+        {
+            <div class="card">
+                <div class="card-header">
+                    <h5>HTML Content</h5>
+                </div>
+                <div class="card-body">
+                    <iframe srcdoc="@uiResource.Text" 
+                            sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox" 
+                            style="width: 100%; height: 500px; border: 1px solid #ccc;"
+                            title="UI Resource Content"
+                            referrerpolicy="no-referrer"
+                            loading="lazy">
+                        Your browser does not support iframes.
+                    </iframe>
+                </div>
+            </div>
+        }
+        else if (uiResource?.MimeType == "text/uri-list")
+        {
+            <div class="card">
+                <div class="card-header">
+                    <h5>External Resource</h5>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(uiResource.Text))
+                    {
+                        var uris = uiResource.Text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                        if (uris.Length > 0)
+                        {
+                            var firstUri = uris[0];
+                            if (firstUri.StartsWith("http://") || firstUri.StartsWith("https://"))
+                            {
+                                @if (IsUriAllowed(firstUri))
+                                {
+                                    <iframe src="@firstUri" 
+                                            sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox" 
+                                            style="width: 100%; height: 500px; border: 1px solid #ccc;"
+                                            title="External Resource"
+                                            referrerpolicy="no-referrer"
+                                            loading="lazy">
+                                        Your browser does not support iframes.
+                                    </iframe>
+                                    <p class="mt-2"><small>Showing: @firstUri</small></p>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-warning">
+                                        <p>External resource blocked by security policy: @firstUri</p>
+                                        <p>Only resources from allowed domains can be displayed.</p>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p>Invalid URI: @firstUri</p>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        }
+        else if (uiResource?.MimeType == "application/vnd.mcp.remotedom")
+        {
+            <div class="card">
+                <div class="card-header">
+                    <h5>Remote DOM Widget</h5>
+                </div>
+                <div class="card-body">
+                    <div id="remote-dom-container-@uiResource.Uri" class="remote-dom-container">
+                        @if (uiResource.Components != null && uiResource.Components.Length > 0)
+                        {
+                            <p>Remote DOM components would be rendered here.</p>
+                            <div class="remote-dom-components">
+                                @foreach (var component in uiResource.Components)
+                                {
+                                    <div class="remote-dom-component" data-component-id="@component.Id" data-component-type="@component.Type">
+                                        <strong>@component.Type (@component.Id)</strong>
+                                        @if (component.Props != null && component.Props.Count > 0)
+                                        {
+                                            <ul class="component-props">
+                                                @foreach (var prop in component.Props)
+                                                {
+                                                    <li><strong>@prop.Key:</strong> @prop.Value</li>
+                                                }
+                                            </ul>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p>No components available for this Remote DOM resource.</p>
+                        }
+                    </div>
+                    <script>
+                        // Initialize Remote DOM widget
+                        initializeRemoteDomWidget('@uiResource.Uri');
+                    </script>
+                </div>
+            </div>
+        }
+        else if (!string.IsNullOrEmpty(uiResource?.MimeType))
+        {
+            <div class="card">
+                <div class="card-header">
+                    <h5>Resource (@uiResource.MimeType)</h5>
+                </div>
+                <div class="card-body">
+                    <pre>@uiResource.Text</pre>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning">
+                <p>No content available for this resource.</p>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <p>No UI resource data provided.</p>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="~/js/ui-actions.js"></script>
+}

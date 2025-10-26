@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Serilog;
 
 // Configure Serilog
@@ -14,6 +15,9 @@ builder.Services.AddControllersWithViews();
 
 // Bind MCP options from configuration
 builder.Services.Configure<McpUi.Web.Services.McpOptions>(builder.Configuration.GetSection("Mcp"));
+
+// Bind payload validation options from configuration
+builder.Services.Configure<McpUi.Web.Models.PayloadValidationOptions>(builder.Configuration.GetSection("PayloadValidation"));
 
 // Register HTTP client for MCP endpoints
 builder.Services.AddHttpClient("Mcp", client =>
@@ -46,6 +50,25 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// Add CSP middleware
+app.Use(async (context, next) =>
+{
+    // Set Content Security Policy header
+    context.Response.Headers.Append("Content-Security-Policy", 
+        "default-src 'self'; " +
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+        "style-src 'self' 'unsafe-inline'; " +
+        "img-src 'self' data: https:; " +
+        "font-src 'self'; " +
+        "connect-src 'self'; " +
+        "frame-src 'self' https:; " +
+        "frame-ancestors 'none'; " +
+        "object-src 'none'; " +
+        "base-uri 'self';");
+    
+    await next();
+});
 
 app.UseRouting();
 
